@@ -1,0 +1,108 @@
+To complete your exam requirements for **Problem Statement 2** and **Problem Statement 3**, here are the simplified codes. These are designed to be easy to explain to an examiner and follow the [Experiment_1_Linux_Commands_and_System_Calls (2).docx](https://indiraicemac-my.sharepoint.com/:w:/r/personal/anita_patil_indiraicem_ac_in/_layouts/15/Doc.aspx?sourcedoc=%7B97AB7269-C8CD-466F-A8DA-6E99762539F4%7D&file=Experiment_1_Linux_Commands_and_System_Calls%20(2).docx&action=default&mobileredirect=true) manual structure.
+
+---
+
+## Problem Statement 2: Directory Management
+This code demonstrates the **Directory Structure** operations. It creates a folder, moves into it, and then removes it.
+
+### The C++ Code (`Directory.cpp`)
+```cpp
+#include <iostream>
+#include <unistd.h>    // For chdir() and rmdir()
+#include <sys/stat.h>  // For mkdir()
+
+using namespace std;
+
+int main() {
+    // 1. mkdir(): Create a directory named "Exam_Folder"
+    // 0777 gives full read/write/execute permissions
+    if (mkdir("Exam_Folder", 0777) == 0) {
+        cout << "1. Directory 'Exam_Folder' created successfully (mkdir)." << endl;
+    }
+
+    // 2. chdir(): Change Directory (Navigate)
+    if (chdir("Exam_Folder") == 0) {
+        cout << "2. Navigated into 'Exam_Folder' (chdir)." << endl;
+    }
+
+    // Move back to parent directory so we can delete the folder
+    chdir("..");
+
+    // 3. rmdir(): Delete Directory
+    if (rmdir("Exam_Folder") == 0) {
+        cout << "3. Directory 'Exam_Folder' deleted successfully (rmdir)." << endl;
+    }
+
+    return 0;
+}
+```
+
+**Terminal Commands to show for this task:**
+* `pwd`: Show absolute path.
+* `ls -l`: List contents and directory permissions.
+
+---
+
+## Problem Statement 3: Process Management
+This is the most important part of the experiment. It demonstrates the **Process Lifecycle** using `fork()` to create a child process.
+
+### The C++ Code (`Process.cpp`)
+```cpp
+#include <iostream>
+#include <unistd.h>    // For fork()
+#include <sys/wait.h>  // For wait()
+
+using namespace std;
+
+int main() {
+    pid_t pid;
+
+    // 1. fork(): Create a child process
+    pid = fork();
+
+    if (pid < 0) {
+        cout << "Fork Failed!" << endl;
+        return 1;
+    } 
+    else if (pid == 0) {
+        // This block is executed by the CHILD process
+        cout << "Child Process Running..." << endl;
+        cout << "Child PID: " << getpid() << " | Parent PID: " << getppid() << endl;
+        
+        // 2. exit(): Child terminates
+        exit(0); 
+    } 
+    else {
+        // This block is executed by the PARENT process
+        // 3. wait(): Parent waits for child to finish
+        wait(NULL); 
+        cout << "\nParent Process: Child has finished execution." << endl;
+        cout << "Parent PID: " << getpid() << endl;
+    }
+
+    return 0;
+}
+```
+
+**Terminal Commands to show for this task:**
+* `ps -u`: Display running processes and their PIDs.
+* `top`: Show real-time process states.
+
+---
+
+## Summary for your Viva (Mapping Table)
+
+| Task | Command | System Call |
+| :--- | :--- | :--- |
+| **Create Directory** | `mkdir` | `mkdir()` |
+| **Change Directory** | `cd` | `chdir()` |
+| **Remove Directory** | `rmdir` | `rmdir()` |
+| **Create Process** | `(automatic)` | `fork()` |
+| **Execute Process** | `(running program)` | `exec()` |
+| **Wait for Child** | `(automatic)` | `wait()` |
+| **Terminate Process** | `kill` or `Ctrl+C` | `exit()` |
+
+### Final Steps for your Exam:
+1.  **Compile and Run:** Use `g++ filename.cpp -o output` then `./output`.
+2.  **Faculty Check:** Show the output of the code and the `ls -l` command.
+3.  **PDF Conversion:** You can use the terminal command `cupsfilter OSL.cpp > OSL.pdf` or simply use a "Print to PDF" tool in Linux to merge your codes and screenshots into a single file.
